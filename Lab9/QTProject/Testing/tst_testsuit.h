@@ -23,87 +23,68 @@ public:
 };
 
 TEST(LockerTest, Test1){
-    //Arrange
     MockInheritorIKeypad Keypad;
-
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-    //Prepare mocks
+    
     EXPECT_CALL(Keypad, wait())
             .Times(1);
-    //Act
+			
     LockerInstance.wait();
 }
 
 TEST(LockerTest, Test2){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
-
+	
     EXPECT_CALL(Latch, getDoorStatus())
             .Times(1)
             .WillOnce(Return(DoorStatus::CLOSE));
 
-    //Assert
     ASSERT_FALSE(LockerInstance.isDoorOpen());
 }
 
 TEST(LockerTest, Test3){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Latch, getDoorStatus())
             .Times(1)
             .WillOnce(Return(DoorStatus::OPEN));
 
-    //Assert
     ASSERT_TRUE(LockerInstance.isDoorOpen());
 }
 
 TEST(LockerTest, Test4){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
 
-    //Prepare mocks
     EXPECT_CALL(Latch, open())
             .Times(1)
             .WillOnce(Return(DoorStatus::OPEN));
 
-    //Assert
     ASSERT_EQ(LockerInstance.unlockDoor(), DoorStatus::OPEN);
 }
 
 TEST(LockerTest, Test5){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
 
-    //Prepare mocks
     EXPECT_CALL(Latch, open())
             .Times(1)
             .WillOnce(Return(DoorStatus::OPEN));
 
-    //Assert
     ASSERT_EQ(LockerInstance.lockDoor(), DoorStatus::CLOSE);
 }
 
 TEST(LockerTest, Test6){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Keypad, isActive())
             .Times(1)
@@ -113,17 +94,13 @@ TEST(LockerTest, Test6){
             .Times(1)
             .WillOnce(Return(true));
 
-    //Assert
     ASSERT_EQ(LockerInstance.hardWareCheck(), HardWareStatus::OK);
 }
 
 TEST(LockerTest, Test7){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(nullptr, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Keypad, isActive())
             .Times(AtLeast(0))
@@ -133,17 +110,13 @@ TEST(LockerTest, Test7){
             .Times(AtLeast(0))
             .WillOnce(Return(true));
 
-    //Assert
     ASSERT_EQ(LockerInstance.hardWareCheck(), HardWareStatus::ERROR);
 }
 
 TEST(LockerTest, Test8){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Keypad, isActive())
             .Times(AtLeast(0))
@@ -153,17 +126,13 @@ TEST(LockerTest, Test8){
             .Times(AtLeast(0))
             .WillOnce(Return(false));
 
-    //Assert
     ASSERT_EQ(LockerInstance.hardWareCheck(), HardWareStatus::ERROR);
 }
 
 TEST(LockerTest, Test9){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Keypad, requestPassword)
             .Times(1)
@@ -174,17 +143,13 @@ TEST(LockerTest, Test9){
                                 }()
                             ));
 
-    //Assert
     ASSERT_TRUE(LockerInstance.isCorrectPassword());
 }
 
 TEST(LockerTest, Test10){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
-
-    //Prepare mocks
 
     EXPECT_CALL(Keypad, requestPassword)
             .Times(1)
@@ -195,12 +160,10 @@ TEST(LockerTest, Test10){
                                 }()
                             ));
 
-    //Assert
     ASSERT_FALSE(LockerInstance.isCorrectPassword());
 };
 
 TEST(LockerTest, Test11){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
@@ -215,22 +178,18 @@ TEST(LockerTest, Test11){
         return PasswordStruct;
     };
 
-    //Prepare mocks
     EXPECT_CALL(Keypad, requestPassword)
             .Times(3)
             .WillOnce(Return(Password(passDict[0])))
             .WillOnce(Return(Password(passDict[1])))
             .WillOnce(Return(Password(passDict[1])));
 
-    //Act
     LockerInstance.resetPassword();
 
-    //Assert
     ASSERT_TRUE(LockerInstance.isCorrectPassword());
 }
 
 TEST(LockerTest, Test12){
-    //Arrange
     MockInheritorIKeypad Keypad;
     MockInheritorILatch Latch;
     LockController LockerInstance(&Keypad, &Latch);
@@ -245,7 +204,6 @@ TEST(LockerTest, Test12){
         return PasswordStruct;
     };
 
-    //Prepare mocks
     EXPECT_CALL(Keypad, requestPassword)
             .Times(5)
             .WillOnce(Return(Password(passDict[0])))
@@ -254,10 +212,9 @@ TEST(LockerTest, Test12){
             .WillOnce(Return(Password(passDict[2])))
             .WillOnce(Return(Password(passDict[2])));
 
-    //Act
     LockerInstance.resetPassword();
     LockerInstance.resetPassword();
-    //Assert
+
     ASSERT_TRUE(LockerInstance.isCorrectPassword());
 }
 
